@@ -32,7 +32,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-            log.info("Login request: {}", loginRequest.username);
+            log.info("Login request: {}", loginRequest.email);
 
             UsernamePasswordAuthenticationToken token = loginRequest.toAuthenticationToken();
 
@@ -45,14 +45,14 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Getter
     static class LoginRequest {
-        private String username;
+        private String email;
         private String password;
 
         UsernamePasswordAuthenticationToken toAuthenticationToken() {
-            if (username == null || password == null || username.isBlank() || password.isBlank()) {
-                throw new AuthenticationServiceException("Username or password is null");
+            if (email == null || password == null || email.isBlank() || password.isBlank()) {
+                throw new AuthenticationServiceException("Email or password is null");
             }
-            return new UsernamePasswordAuthenticationToken(username, password);
+            return new UsernamePasswordAuthenticationToken(email, password);
         }
     }
 }
