@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class ChatController {
     private final ChatService chatService;
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public ResponseEntity<ChatRoomResponse> createChatRoom(
             @AuthenticationPrincipal Long memberId
@@ -35,7 +37,9 @@ public class ChatController {
         return ResponseEntity.ok(ChatRoomResponse.from(chatRoom));
     }
 
+
     @PostMapping("/join")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<ChatRoomResponse> joinChatRoom(
             @AuthenticationPrincipal Long memberId,
             @RequestParam("chatRoomId") UUID chatRoomId
@@ -51,7 +55,9 @@ public class ChatController {
         return chatService.subScribe(chatRoomId);
     }
 
+
     @GetMapping("/waiting-rooms")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<List<ChatRoomResponse>> getWaitingRooms() {
         List<ChatRoom> chatRoom = chatService.getWaitingRooms();
         List<ChatRoomResponse> responses = chatRoom.stream().map(ChatRoomResponse::from).toList();
