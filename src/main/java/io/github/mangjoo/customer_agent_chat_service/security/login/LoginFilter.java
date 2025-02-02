@@ -43,16 +43,12 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         }
     }
 
-    @Getter
-    static class LoginRequest {
-        private String email;
-        private String password;
-
-        UsernamePasswordAuthenticationToken toAuthenticationToken() {
-            if (email == null || password == null || email.isBlank() || password.isBlank()) {
-                throw new AuthenticationServiceException("Email or password is null");
+    record LoginRequest(String email, String password) {
+            UsernamePasswordAuthenticationToken toAuthenticationToken() {
+                if (email == null || password == null || email.isBlank() || password.isBlank()) {
+                    throw new AuthenticationServiceException("Email or password is null");
+                }
+                return new UsernamePasswordAuthenticationToken(email, password);
             }
-            return new UsernamePasswordAuthenticationToken(email, password);
         }
-    }
 }
