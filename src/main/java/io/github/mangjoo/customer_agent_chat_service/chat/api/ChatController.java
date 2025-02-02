@@ -1,5 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.api;
 
+import io.github.mangjoo.customer_agent_chat_service.chat.api.model.ChatRoomResponse;
 import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatMessage;
 import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
 import io.github.mangjoo.customer_agent_chat_service.chat.service.ChatService;
