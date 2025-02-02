@@ -1,6 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.infra;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatMessage;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package io.github.mangjoo.customer_agent_chat_service.chat;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.RoomStatus;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.RoomStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

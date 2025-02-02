@@ -1,4 +1,4 @@
-package io.github.mangjoo.customer_agent_chat_service.chat.domain;
+package io.github.mangjoo.customer_agent_chat_service.chat.model;
 
 import io.github.mangjoo.customer_agent_chat_service.global.DateTemplate;
 import jakarta.persistence.Entity;

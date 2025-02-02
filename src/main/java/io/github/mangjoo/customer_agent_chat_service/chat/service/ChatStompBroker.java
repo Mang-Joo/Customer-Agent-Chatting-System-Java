@@ -1,7 +1,7 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.service;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatMessage;
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.MessageBroker;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.MessageBroker;
 import io.github.mangjoo.customer_agent_chat_service.chat.infra.ChatMessageRepository;
 import io.github.mangjoo.customer_agent_chat_service.chat.infra.WebSocketSessionRepository;
 import io.github.mangjoo.customer_agent_chat_service.exception.ErrorCode;

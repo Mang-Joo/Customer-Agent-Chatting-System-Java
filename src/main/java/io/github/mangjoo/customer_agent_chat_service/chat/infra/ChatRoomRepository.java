@@ -1,6 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.infra;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
 import io.github.mangjoo.customer_agent_chat_service.exception.ErrorCode;
 import io.github.mangjoo.customer_agent_chat_service.exception.MangJooException;
 import lombok.RequiredArgsConstructor;

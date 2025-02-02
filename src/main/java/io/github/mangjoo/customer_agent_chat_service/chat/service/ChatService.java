@@ -1,8 +1,8 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.service;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatMessage;
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.MessageBroker;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.MessageBroker;
 import io.github.mangjoo.customer_agent_chat_service.chat.infra.ChatMessageRepository;
 import io.github.mangjoo.customer_agent_chat_service.chat.infra.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;

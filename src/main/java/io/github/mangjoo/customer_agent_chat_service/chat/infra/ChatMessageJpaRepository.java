@@ -1,6 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.infra;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatMessage;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

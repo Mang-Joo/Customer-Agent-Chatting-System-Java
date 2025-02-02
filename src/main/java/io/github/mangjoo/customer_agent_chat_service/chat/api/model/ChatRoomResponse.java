@@ -1,6 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.api.model;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
 
 import java.util.UUID;
 

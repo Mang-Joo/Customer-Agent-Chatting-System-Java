@@ -1,6 +1,6 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.infra;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
+import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
