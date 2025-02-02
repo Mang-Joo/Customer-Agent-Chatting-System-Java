@@ -1,6 +1,5 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.infra;
 
-import io.github.mangjoo.customer_agent_chat_service.chat.domain.RoomStatus;
 import io.github.mangjoo.customer_agent_chat_service.chat.domain.ChatRoom;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,10 +11,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ChatRoomJpaRepository extends JpaRepository<ChatRoom, Long> {
-    Optional<ChatRoom> findByAgentId(Long agentId);
-
-    List<ChatRoom> findByRoomStatus(RoomStatus roomStatus);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from ChatRoom c where c.chatRoomId = :chatRoomId")
     Optional<ChatRoom> findByChatRoomId(UUID chatRoomId);
