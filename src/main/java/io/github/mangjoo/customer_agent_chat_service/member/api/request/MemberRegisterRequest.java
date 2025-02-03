@@ -10,6 +10,6 @@ public record MemberRegisterRequest(
         @NotNull @NotBlank String name
 ) {
     public Member toMember() {
-        return Member.createUser(email, password, name);
+        return Member.createUser(email, name, password);
     }
 }
