@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>임시 JSON 로그인 페이지</title>
+</head>
+<body>
+<h2>로그인</h2>
+<form id="loginForm">
+    <label for="email">이메일:</label>
+    <input type="text" id="email" name="email" required /><br><br>
+
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required /><br><br>
+
+    <button type="submit">로그인</button>
+</form>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const data = { email: email, password: password };
+
+        try {
+            const response = await fetch('/api/v1/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                // 로그인 성공 시 원하는 페이지로 이동하거나 추가 처리를 수행
+                alert("로그인 성공!");
+                window.location.href = '/swagger-ui/index.html';
+            } else {
+                alert("로그인 실패! 이메일과 비밀번호를 확인하세요.");
+            }
+        } catch (error) {
+            console.error("로그인 중 에러 발생:", error);
+            alert("로그인 요청 중 에러가 발생했습니다.");
+        }
+    });
+</script>
+</body>
+</html>
