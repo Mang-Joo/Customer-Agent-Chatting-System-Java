@@ -24,4 +24,15 @@ public class MemberRepository {
     public Member save(Member member) {
         return memberJpaRepository.save(member);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsByEmailAndName(String email) {
+        return memberJpaRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Member findById(Long userId) {
+        return memberJpaRepository.findById(userId)
+                .orElseThrow(() -> new MangJooException(ErrorCode.BAD_REQUEST, "Member not found"));
+    }
 }
