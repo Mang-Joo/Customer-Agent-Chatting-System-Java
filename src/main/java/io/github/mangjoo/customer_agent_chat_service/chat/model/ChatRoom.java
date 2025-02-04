@@ -20,12 +20,17 @@ public class ChatRoom extends DateTemplate {
 
     @Id
     private UUID chatRoomId;
+    private String title;
     private Long customerId;
     private Long agentId;
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
 
-    public ChatRoom(Long customerId) {
+    public ChatRoom(String title, Long customerId) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("title is null");
+        }
+
         if (customerId == null) {
             throw new IllegalArgumentException("customerId is null");
         }
