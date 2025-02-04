@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5173", "https://chat-backend.mangjoo.com"));
                     corsConfiguration.setAllowedMethods(List.of("*"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
@@ -53,11 +53,12 @@ public class SecurityConfig {
                 .securityContext(c -> c.requireExplicitSave(false))
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/api/v1/login", "/api/v1/register").permitAll()
+                                .requestMatchers("/api/v1/login", "/api/v1/register", "/login.html").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs")
+                                .hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
-                .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(loginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(loginProvider);
         return http.build();
