@@ -22,7 +22,6 @@ public class Member extends DateTemplate {
     private Long userId;
     @Column(unique = true)
     private String email;
-    @Column(unique = true)
     private String name;
     private String password;
 
