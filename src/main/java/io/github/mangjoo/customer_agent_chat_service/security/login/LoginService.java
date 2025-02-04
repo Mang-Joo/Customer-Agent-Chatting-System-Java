@@ -19,7 +19,7 @@ public class LoginService {
     public Member login(MemberLogin login) {
         Member member = memberRepository.findByEmail(login.email());
         if (member.isNotPasswordMatch(passwordEncoder, login.password())) {
-            throw new MangJooException(ErrorCode.UNAUTHORIZED, "Password not match");
+            throw new MangJooException(ErrorCode.UNAUTHORIZED, "Invalid email or password.");
         }
         return member;
     }
