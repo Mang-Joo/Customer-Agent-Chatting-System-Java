@@ -1,6 +1,8 @@
 package io.github.mangjoo.customer_agent_chat_service.security.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.mangjoo.customer_agent_chat_service.member.model.Member;
+import io.github.mangjoo.customer_agent_chat_service.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +21,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -26,8 +29,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 
         HttpSession session = request.getSession();
-        session.setAttribute("userId", authentication.getPrincipal());
+        Long id = (Long) authentication.getPrincipal();
+        session.setAttribute("userId", id);
 
+        Member principal = memberRepository.findById(id);
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
@@ -35,7 +40,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         GrantedAuthority grantedAuthority = authorities.stream().findFirst().orElseThrow();
 
-        objectMapper.writeValue(response.getWriter(), new LoginResponse((Long) authentication.getPrincipal(), grantedAuthority.getAuthority()));
+        objectMapper.writeValue(response.getWriter(), new LoginResponse(principal.getUserId(), principal.getName(), grantedAuthority.getAuthority()));
     }
 
 
