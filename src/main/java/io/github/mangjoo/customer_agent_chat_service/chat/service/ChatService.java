@@ -21,9 +21,9 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
-    public ChatRoom createChatRoom(Long customerId) {
-        log.info("Create chat room for customer ID: {}", customerId);
-        ChatRoom saved = chatRoomRepository.save(new ChatRoom(customerId));
+    public ChatRoom createChatRoom(ChatRoom chatRoom) {
+        log.info("Create chat room for customer ID: {}", chatRoom.getCustomerId());
+        ChatRoom saved = chatRoomRepository.save(chatRoom);
         log.info("Chat room created ID: {}", saved.getChatRoomId());
         return saved;
     }

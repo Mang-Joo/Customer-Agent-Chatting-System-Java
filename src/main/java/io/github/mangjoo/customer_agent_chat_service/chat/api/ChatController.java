@@ -1,6 +1,7 @@
 package io.github.mangjoo.customer_agent_chat_service.chat.api;
 
 import io.github.mangjoo.customer_agent_chat_service.chat.api.model.ChatRoomResponse;
+import io.github.mangjoo.customer_agent_chat_service.chat.api.model.CreateChatRoomRequest;
 import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
 import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
 import io.github.mangjoo.customer_agent_chat_service.chat.service.ChatService;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +30,13 @@ import java.util.UUID;
 public class ChatController {
     private final ChatService chatService;
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ChatRoomResponse> createChatRoom(
-            @AuthenticationPrincipal Long memberId
-    ) {
-        ChatRoom chatRoom = chatService.createChatRoom(memberId);
+            @AuthenticationPrincipal Long memberId,
+            @RequestBody CreateChatRoomRequest request
+            ) {
+        ChatRoom chatRoom = chatService.createChatRoom(new ChatRoom(request.title(), memberId));
         return ResponseEntity.ok(ChatRoomResponse.from(chatRoom));
     }
 
