@@ -5,13 +5,15 @@ import io.github.mangjoo.customer_agent_chat_service.chat.api.model.CreateChatRo
 import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatMessage;
 import io.github.mangjoo.customer_agent_chat_service.chat.model.ChatRoom;
 import io.github.mangjoo.customer_agent_chat_service.chat.service.ChatService;
+import io.github.mangjoo.customer_agent_chat_service.exception.MangJooErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,19 +32,45 @@ import java.util.UUID;
 public class ChatController {
     private final ChatService chatService;
 
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
+    @Operation(
+            summary = "Create Chat Room API",
+            description = "Request agent to create counseling chat room",
+            tags = {"Chat API"}
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Chat Room Created Successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid Request", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Only for User", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Can't request of agent", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class)))
+            }
+    )
     public ResponseEntity<ChatRoomResponse> createChatRoom(
             @AuthenticationPrincipal Long memberId,
-            @RequestBody CreateChatRoomRequest request
-            ) {
+            @Valid @RequestBody CreateChatRoomRequest request
+    ) {
         ChatRoom chatRoom = chatService.createChatRoom(new ChatRoom(request.title(), memberId));
         return ResponseEntity.ok(ChatRoomResponse.from(chatRoom));
     }
 
-
     @PostMapping("/join")
     @PreAuthorize("hasRole('AGENT')")
+    @Operation(
+            summary = "Join Chat Room API",
+            description = "Request agent to join counseling chat room",
+            tags = {"Chat API"}
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Chat Room Joined Successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid Request", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Only for Agent", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Can't request of user", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class)))
+            }
+    )
     public ResponseEntity<ChatRoomResponse> joinChatRoom(
             @AuthenticationPrincipal Long memberId,
             @RequestParam("chatRoomId") UUID chatRoomId
@@ -51,35 +79,26 @@ public class ChatController {
         return ResponseEntity.ok(ChatRoomResponse.from(chatRoom));
     }
 
-    @SubscribeMapping("/chat/room/{chatRoomId}")
-    public List<ChatMessage> subscribeChatRoom(
-            @DestinationVariable("chatRoomId") UUID chatRoomId
-    ) {
-        return chatService.subScribe(chatRoomId);
-    }
-
 
     @GetMapping("/waiting-rooms")
     @PreAuthorize("hasRole('AGENT')")
+    @Operation(
+            summary = "Get Waiting Rooms API",
+            description = "Get all waiting rooms",
+            tags = {"Chat API"}
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Waiting Rooms Fetched Successfully"),
+                    @ApiResponse(responseCode = "401", description = "Only for Agent", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class))),
+                    @ApiResponse(responseCode = "403", description = "Can't request of user", content = @Content(schema = @Schema(implementation = MangJooErrorResponse.class)))
+            }
+    )
     public ResponseEntity<List<ChatRoomResponse>> getWaitingRooms() {
         List<ChatRoom> chatRoom = chatService.getWaitingRooms();
         List<ChatRoomResponse> responses = chatRoom.stream().map(ChatRoomResponse::from).toList();
 
         return ResponseEntity.ok(responses);
-    }
-
-    @MessageMapping("/chat/room/{chatRoomId}")
-    public void sendMessage(
-            @DestinationVariable("chatRoomId") UUID chatRoomId,
-            @Payload ChatMessageRequest message,
-            @Header("simpSessionId") String sessionId
-    ) {
-        ChatMessage chatMessage = message.toChatMessage(chatRoomId);
-        if (chatMessage.isEndMessage()) {
-            chatService.leave(sessionId, chatMessage);
-        } else {
-            chatService.sendMessage(chatMessage);
-        }
     }
 
     public record ChatMessageRequest(
