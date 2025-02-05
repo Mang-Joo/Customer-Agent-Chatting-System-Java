@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -92,5 +94,17 @@ public class Member extends DateTemplate {
         this.password = passwordEncoder.encode(this.password);
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(userId, member.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(userId);
     }
 }
