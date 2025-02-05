@@ -2,6 +2,7 @@ package io.github.mangjoo.customer_agent_chat_service.security;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.mangjoo.customer_agent_chat_service.member.model.DuplicateLoginCheck;
 import io.github.mangjoo.customer_agent_chat_service.security.login.CustomAuthenticationFailureHandler;
 import io.github.mangjoo.customer_agent_chat_service.security.login.CustomAuthenticationSuccessHandler;
 import io.github.mangjoo.customer_agent_chat_service.security.login.LoginFilter;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -27,6 +29,7 @@ import java.util.List;
 public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final LoginProvider loginProvider;
+    private final DuplicateLoginCheck duplicateLoginCheck;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
@@ -46,7 +49,7 @@ public class SecurityConfig {
                     return corsConfiguration;
                 }))
                 .sessionManagement(c ->
-                        c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        c.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                                 .maximumSessions(1)
                                 .maxSessionsPreventsLogin(true)
                 )
@@ -60,6 +63,7 @@ public class SecurityConfig {
                                 .authenticated()
                 )
                 .addFilterBefore(loginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new SessionCheckFilter(duplicateLoginCheck), AnonymousAuthenticationFilter.class)
                 .authenticationProvider(loginProvider);
         return http.build();
     }

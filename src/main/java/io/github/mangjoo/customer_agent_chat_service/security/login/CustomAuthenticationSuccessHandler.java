@@ -1,6 +1,7 @@
 package io.github.mangjoo.customer_agent_chat_service.security.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.mangjoo.customer_agent_chat_service.member.model.DuplicateLoginCheck;
 import io.github.mangjoo.customer_agent_chat_service.member.model.Member;
 import io.github.mangjoo.customer_agent_chat_service.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,15 +23,18 @@ import java.util.Collection;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
     private final MemberRepository memberRepository;
+    private final DuplicateLoginCheck duplicateLoginCheck;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("Login Success");
 
 
+
         HttpSession session = request.getSession();
         Long id = (Long) authentication.getPrincipal();
         session.setAttribute("userId", id);
+        duplicateLoginCheck.login(id, session.getId());
 
         Member principal = memberRepository.findById(id);
 
